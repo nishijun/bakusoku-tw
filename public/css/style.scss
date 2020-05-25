@@ -1,0 +1,1401 @@
+//----------- 基礎情報定義 ----------------
+$font-family_default: 'Noto Sans', sans-serif;
+$font-family_corp: 'Amatic SC', cursive;
+
+$color_black: black;
+$color_semi_black: #666;
+$color_gray: #eee;
+$color_white: white;
+$color_blue: #18B4D1;
+$color_yellow: #F3EB00;
+$color_red: #B40809;
+$color_decrement: #B40a0a;
+$color_increment: #8cbf21;
+
+$font-size_6: 6px;
+$font-size_12: 12px;
+$font-size_14: 14px;
+$font-size_16: 16px;
+$font-size_18: 18px;
+$font-size_20: 20px;
+$font-size_default: 22px;
+$font-size_24: 24px;
+$font-size_26: 26px;
+$font-size_28: 28px;
+$font-size_30: 30px;
+$font-size_40: 40px;
+$font-size_60: 60px;
+
+$space_s: 5px;
+$space_m: 10px;
+$space_l: 15px;
+$space_xl: 20px;
+$space_xxl: 30px;
+$space_3l: 40px;
+
+// Mixin
+$breakpoints: (
+  'sm': 'screen and (max-width: 414px)',
+  'md': 'screen and (max-width: 768px)',
+  'lg': 'screen and (max-width: 1000px)',
+  'xl': 'screen and (max-width: 1200px)',
+) !default;
+
+@mixin mq($breakpoint: sm) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+
+//----------- 共通 ----------------
+body {
+  font-size: $font-size_default;
+  font-family: $font-family_default;
+}
+
+a {
+  text-decoration: none;
+  color: $color_white;
+  display: inline-block;
+  width: 100%;
+  transition: .5s;
+}
+
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction {
+  bottom: 0px;
+}
+
+.error-message {
+  color: $color_red;
+  margin-bottom: 15px;
+}
+
+.flash_message {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+  height: 60px;
+  background: rgb(255, 230, 230);
+  color: $color_red;
+  text-align: center;
+  line-height: 60px;
+  font-weight: bold;
+  font-size: $font-size_16;
+}
+
+.decrement {
+  color: $color_decrement;
+}
+
+.increment {
+  color: $color_increment;
+}
+
+.btn {
+  transition: .5s;
+  cursor: pointer;
+  &:hover {
+    opacity: .8;
+  }
+}
+
+.balloon {
+  position: relative;
+  display: inline-block;
+}
+.balloon:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border: 10px solid transparent;
+  border-top: 10px solid $color_blue;
+}
+
+.user-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+// チェックボックス共通部分
+.checkbox {
+  display: none;
+}
+.checkbox-label {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  width: auto;
+  &::before {
+    background: $color_white;
+    content: '';
+    display: inline-block;
+  }
+  &::after {
+    content: '';
+    display: block;
+    opacity: 0;
+    position: absolute;
+    transform: rotate(45deg);
+  }
+}
+.checkbox:checked + .checkbox-label::after {
+  opacity: 1;
+}
+
+.whole {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  &.active {
+    display: block
+  }
+}
+.container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.chart {
+  height: 100%;
+}
+
+// Header
+.header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  @include mq(md) {
+    height: 40px;
+  }
+  &-left {
+    margin-left: 35px;
+    @include mq(md) {
+      margin-left: 15px;
+      width: 100px;
+      img {
+        width: 100%;
+      }
+    }
+  }
+  &-right {
+    background: $color_black;
+    width: 190px;
+    height: 100%;
+    text-align: center;
+    @include mq(md) {
+      width: 80px;
+    }
+    &-link {
+      line-height: 60px;
+      color: $color_white;
+      display: inline-block;
+      width: 100%;
+      text-decoration: none;
+      @include mq(md) {
+        line-height: 40px;
+        font-size: $font-size_12;
+      }
+    }
+  }
+}
+
+.header-management {
+  background: $color_white;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, .1);
+  z-index: 3;
+  .toggle {
+    display: none;
+    @include mq(lg) {
+      cursor: pointer;
+      position: absolute;
+      top: 20px;
+      left: 25px;
+      display: block;
+    }
+    @include mq(md) {
+      top: 10px;
+    }
+    .fa-times, .fa-bars {
+      display: none;
+    }
+    .fa-times.active, .fa-bars.active {
+      display: block;
+    }
+  }
+  .header-left {
+    @include mq(lg) {
+      text-align: center;
+      width: 200px;
+      margin: 0 auto;
+    }
+    @include mq(md) {
+      width: 150px;
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// フッター
+.footer {
+  height: 50px;
+  background: $color_black;
+  width: 100%;
+  color: $color_white;
+  font-size: $font-size_14;
+  display: flex;
+  padding: 0 30px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  @include mq(md) {
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: $font-size_6;
+  }
+  &-left {
+    width: 50%;
+    text-align: center;
+  }
+  &-right {
+    width: 50%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    white-space: nowrap;
+    a {
+      display: inline-block;
+      width: auto;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// 管理画面
+.dashboard {
+  padding-top: 60px;
+  display: flex;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  // サイドバー
+  .sidebar {
+    width: 18%;
+    background: $color_blue;
+    color: $color_white;
+    @include mq(lg) {
+      transition: .3s;
+      width: 100%;
+      height: 100vh;
+      padding-top: 60px;
+      position: fixed;
+      top: 0;
+      left: -100vw;
+      z-index: 2;
+      box-sizing: border-box;
+      &.active {
+        left: 0;
+      }
+    }
+    &-profile {
+      height: 140px;
+      box-sizing: border-box;
+      padding: 20px 15px;
+      border-bottom: 1px solid $color_white;
+      &-user {
+        display: flex;
+        align-items: center;
+        &-name {
+          font-weight: bold;
+          font-size: $font-size_18;
+          margin-bottom: 5px;
+          overflow: scroll;
+          height: 35px;
+        }
+        &-id {
+          font-size: $font-size_12;
+        }
+      }
+      &-setting {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        &-reload {
+          width: 22px;
+        }
+        &-logout {
+          cursor: pointer;
+          font-size: $font-size_14;
+          width: 140px;
+          height: 35px;
+          border: 2px solid $color_white;
+          border-radius: 17.5px;
+          line-height: 35px;
+          text-align: center;
+          margin-left: 20px;
+          transition: .5s;
+          font-weight: bold;
+          &:hover {
+            background: rgba(255, 255, 255, .2);
+          }
+        }
+      }
+    }
+    .menus {
+      .menu {
+        height: 70px;
+        border-bottom: 1px solid $color_white;
+        line-height: 70px;
+        padding-left: 15px;
+        transition: .5s;
+        font-size: $font-size_18;
+        &:hover {
+          background: #0f7e92;
+        }
+        &.active {
+          background: $color_black;
+        }
+        i {
+          margin-right: 5px;
+          font-size: $font-size_26;
+        }
+      }
+    }
+  }
+
+  // メインコンテンツ
+  .main-content {
+    width: 82%;
+    @include mq(lg) {
+      width: 100%;
+    }
+  }
+}
+
+//----------- TOPページ ----------------
+// TOPイメージ
+.top-image {
+  width: 100%;
+  @include mq(md) {
+    display: none;
+  }
+}
+.top-image-sp {
+  display: none;
+  @include mq(md) {
+    display: block;
+    width: 100%;
+  }
+}
+
+.position {
+  position: relative;
+  top: -70px;
+  @include mq(md) {
+    margin-bottom: 15px;
+    top: -30px;
+  }
+}
+
+.top-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &-paragraph {
+    font-style: italic;
+    font-weight: bold;
+    margin: 0 15px;
+    @include mq(md) {
+      text-align: center;
+      font-size: $font-size_14;
+      margin: 0;
+    }
+    &-span {
+      font-size: $font-size_30;
+      @include mq(md) {
+        margin-bottom: 15px;
+        font-size: $font-size_18;
+      }
+    }
+    &-pc {
+      @include mq(md) {
+        display: none;
+      }
+    }
+    &-sp {
+      display: none;
+      @include mq(md) {
+        display: block;
+      }
+    }
+  }
+}
+
+.top-sentence {
+  font-style: italic;
+  font-size: $font-size_40;
+  font-weight: bold;
+  text-align: center;
+  @include mq(md) {
+    font-size: $font-size_24;
+  }
+  &-span {
+    font-size: $font-size_60;
+    font-size: $font-size_40;
+  }
+}
+
+.margin {
+  margin-bottom: 50px;
+}
+
+// 機能一覧
+.functions {
+  margin: 100px auto 75px;
+  .function-bg1 {
+    background: url('../img/function-bg1.png');
+    background-size: cover;
+    background-position: right;
+    @include mq(md) {
+      background: url('../img/function-bg1-sp.png');
+      background-position: right;
+    }
+  }
+  .function-bg2 {
+    background: url('../img/function-bg2.png');
+    background-size: cover;
+    @include mq(md) {
+      background: url('../img/function-bg2-sp.png');
+      background-position: left;
+    }
+  }
+  .function {
+    height: 500px;
+    &-inner {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 50px;
+      @include mq(lg) {
+        padding-top: 70px;
+      }
+      @include mq(md) {
+        flex-wrap: wrap;
+        max-width: 400px;
+        padding-top: 20px;
+      }
+      &-image-pc {
+        width: 44%;
+        object-fit: contain;
+        @include mq(lg) {
+          display: none;
+        }
+      }
+      &-image-sp {
+        display: none;
+        @include mq(lg) {
+          display: block;
+          width: 48%;
+          object-fit: contain;
+        }
+        @include mq(md) {
+          width: 100%;
+          order: 1;
+        }
+      }
+      &-content {
+        width: 44%;
+        color: $color_white;
+        @include mq(lg) {
+          width: 48%;
+          font-size: $font-size_18;
+        }
+        @include mq(md) {
+          width: 100%;
+          font-size: $font-size_14;
+          order: 2;
+        }
+        &-title {
+          margin: 30px 0;
+          height: 50px;
+          padding: 0 20px;
+          display: inline-block;
+          line-height: 50px;
+          font-size: $font-size_28;
+          font-weight: bold;
+          background: $color_black;
+          text-align: center;
+          @include mq(lg) {
+            font-size: $font-size_default;
+            margin-bottom: 15px;
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+          }
+        }
+        &-text {
+          line-height: 40px;
+          @include mq(lg) {
+            line-height: 35px;
+          }
+          @include mq(md) {
+            line-height: 25px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 料金一覧
+.fares {
+  margin: 70px auto 100px;
+  max-width: 1030px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+
+  .green-border {
+    border: 4px solid $color_increment;
+  }
+  .green-color {
+    color: $color_increment;
+  }
+  .green-bg {
+    background: $color_increment;
+  }
+  .green-stripe {
+    background: repeating-linear-gradient(-45deg, $color_increment 0, $color_increment 4px, #a3cc4d 4px, #a3cc4d 8px);
+  }
+
+  .blue-border {
+    border: 4px solid $color_blue;
+  }
+  .blue-color {
+    color: $color_blue;
+  }
+  .blue-bg {
+    background: $color_blue;
+  }
+  .blue-stripe {
+    background: repeating-linear-gradient(-45deg, $color_blue 0, $color_blue 4px, #45cada 4px, #45cada 8px);
+  }
+  .red-border {
+    border: 4px solid $color_red;
+  }
+  .red-color {
+    color: $color_red;
+  }
+  .red-bg {
+    background: $color_red;
+  }
+  .red-stripe {
+    background: repeating-linear-gradient(-45deg, $color_red 0, $color_red 4px, #c33b3b 4px, #c33b3b 8px);
+  }
+  .fare {
+    width: 30%;
+    box-shadow: 6px 6px 0 #d9d9d9;
+    @include mq(lg) {
+      width: 100%;
+      max-width: 308px;
+      margin: 0 auto;
+    }
+    &-pc {
+      @include mq(lg) {
+        display: none;
+      }
+    }
+    &-sp {
+      display: none;
+      @include mq(lg) {
+        display: block;
+      }
+    }
+    &-title {
+      color: $color_white;
+      font-weight: bold;
+      text-align: center;
+      height: 50px;
+      line-height: 50px;
+      box-sizing: border-box;
+      position: relative;
+      margin-bottom: 20px;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -15px;
+        border: 15px solid transparent;
+      }
+    }
+    .green-balloon {
+      &:before {
+        border-top: 15px solid $color_increment;
+      }
+    }
+    .blue-balloon {
+      &:before {
+        border-top: 15px solid $color_blue;
+      }
+    }
+    .red-balloon {
+      &:before {
+        border-top: 15px solid $color_red;
+      }
+    }
+    &-fee {
+      font-style: italic;
+      font-size: $font-size_18;
+      text-align: center;
+      font-weight: bold;
+      &-span {
+        font-size: $font-size_30;
+      }
+    }
+    &-list {
+      list-style: initial;
+      margin: 15px 0 15px 40px;
+      font-size: $font-size_18;
+      line-height: 1.5;
+    }
+    &-button {
+      margin: 20px;
+      height: 50px;
+      font-weight: bold;
+      box-sizing: border-box;
+      text-align: center;
+      line-height: 50px;
+      &-link {
+        display: inline-block;
+        width: 100%;
+      }
+    }
+  }
+}
+
+//----------- ログインページ ----------------
+.login {
+  height: 100vh;
+  background: url('../img/login-bg.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15px;
+  &-inner {
+    background: $color_white;
+    width: 560px;
+    height: 350px;
+    text-align: center;
+    padding: 65px 15px 0;
+    box-sizing: border-box;
+    &-logo {
+      width: 73%;
+      @include mq(sm) {
+        width: 95%;
+      }
+    }
+    &-title {
+      max-width: 300px;
+      margin: 40px auto;
+      display: flex;
+      align-items: center;
+      &-border {
+        height: 0;
+        border-top: 1px solid $color_blue;
+        width: calc(100% / 3);
+      }
+      &-paragraph {
+        font-style: italic;
+        color: $color_blue;
+        font-size: $font-size_18;
+        width: calc(100% / 3);
+      }
+    }
+    .twitter {
+      background: $color_blue;
+      max-width: 300px;
+      text-align: center;
+      height: 50px;
+      line-height: 50px;
+      border-radius: 25px;
+      margin: 0 auto;
+      &-link {
+        display: inline-block;
+        width: 100%;
+        i {
+          margin-right: 15px;
+        }
+      }
+    }
+  }
+}
+
+//----------- ダッシュボード ----------------
+.graphs-pc {
+  height: calc(100vh - 60px);
+  background: $color_gray;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+  color: $color_blue;
+  @include mq(md) {
+    display: none;
+  }
+}
+.graphs-sp {
+  height: calc(100vh - 60px);
+  background: $color_gray;
+  padding: 50px 20px;
+  box-sizing: border-box;
+  color: $color_blue;
+  display: none;
+  @include mq(md) {
+    display: block;
+    padding: 20px;
+  }
+}
+.extra {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.graph {
+  background: $color_white;
+  width: 45%;
+  max-height: 390px;
+  padding: 15px;
+  box-sizing: border-box;
+  height: 40vh;
+  @include mq(md) {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .chart {
+    height: 100%!important;
+    width: 100%!important;
+  }
+  &-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    &-title {
+      font-weight: bold;
+      font-size: $font-size_18;
+    }
+    &-number {
+      font-size: $font-size_30;
+    }
+  }
+  &-figure {
+    height: 85%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+}
+
+//----------- 自動フォロー ----------------
+.outer {
+  padding: 30px;
+  @include mq(lg) {
+    padding: 40px 15px;
+  }
+  @include mq(md) {
+    padding: 15px;
+  }
+  .input {
+    width: 49%;
+    @include mq(xl) {
+      width: 100%;
+    }
+    &-area {
+      &-form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        @include mq(md) {
+          flex-direction: column;
+        }
+        &-label {
+          color: $color_semi_black;
+          font-size: $font-size_12;
+          font-weight: bold;
+          text-align: left;
+          @include mq(md) {
+            width: 100%;
+            font-size: $font-size_18;
+            margin-bottom: 10px;
+          }
+        }
+        &-input {
+          height: 50px;
+          border: 1px solid $color_blue;
+          box-sizing: border-box;
+          width: 75%;
+          font-size: $font-size_18;
+          padding: 15px;
+          box-sizing: border-box;
+          outline: none;
+          &::placeholder {
+            color: #ccc;
+          }
+          @include mq(xl) {
+            width: 85%;
+          }
+          @include mq(md) {
+            width: 100%;
+          }
+        }
+        &:nth-child(1) {
+          margin-bottom: 20px;
+        }
+        &-submit {
+          width: 240px;
+          height: 40px;
+          background: $color_blue;
+          color: $color_white;
+          font-size: $font-size_18;
+          box-sizing: border-box;
+          border: none;
+          border-radius: 20px;
+          margin: 30px auto;
+        }
+      }
+    }
+  }
+  .manuals {
+    display: flex;
+    justify-content: space-between;
+    @include mq(md) {
+      flex-direction: column;
+    }
+    .manual {
+      width: 49%;
+      padding: 40px;
+      box-sizing: border-box;
+      background: $color_gray;
+      @include mq(xl) {
+        padding: 15px;
+      }
+      @include mq(md) {
+        width: 100%;
+        margin-bottom: 30px;
+        &:nth-child(2) {
+          margin-bottom: 0;
+        }
+      }
+      &-title {
+        color: $color_blue;
+        font-size: $font-size_24;
+        font-weight: bold;
+        padding-bottom: 15px;
+        border-bottom: 1px solid $color_blue;
+        margin-bottom: 30px;
+      }
+      &-step {
+        display: flex;
+        margin-bottom: 10px;
+        &:nth-child(4) {
+          margin-bottom: 25px;
+        }
+        &-number {
+          width: 40px;
+          height: 40px;
+          background: $color_blue;
+          color: $color_white;
+          font-size: 26px;
+          line-height: 40px;
+          text-align: center;
+          font-style: italic;
+        }
+        &-text {
+          background: $color_white;
+          font-size: $font-size_18;
+          color: $color_blue;
+          font-weight: bold;
+          width: 100%;
+          height: 40px;
+          padding: 10px;
+          border: 1px solid $color_blue;
+          box-sizing: border-box;
+          @include mq(xl) {
+            font-size: $font-size_14;
+            padding: 13px 8px;
+          }
+          @include mq(sm) {
+            font-size: $font-size_12;
+
+          }
+        }
+      }
+      &-content {
+        font-size: $font-size_14;
+        color: $color_semi_black;
+        line-height: 28px;
+        @include mq(sm) {
+          line-height: 20px;
+          font-size: $font-size_12;
+        }
+      }
+      &-list {
+        background: $color_white;
+        padding: 20px 20px 20px 40px;
+        margin-bottom: 25px;
+        border: 1px solid $color_blue;
+        list-style: initial;
+        color: $color_blue;
+        font-size: $font-size_18;
+        font-weight: bold;
+        @include mq(xl) {
+          font-size: $font-size_14;
+        }
+        &-item {
+          margin-bottom: 15px;
+          &:nth-child(3) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+//----------- フォローリスト ----------------
+.drop-menus {
+  display: flex;
+  @include mq(md) {
+    flex-direction: column;
+  }
+  .drop-menu1 {
+    width: 290px;
+    margin-right: 10px;
+    @include mq(md) {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
+  .drop-menu2 {
+    width: 150px;
+    @include mq(md) {
+      width: 290px;
+    }
+  }
+  .drop-menu {
+    &-item {
+      background: $color_blue;
+      color: $color_white;
+      font-size: $font-size_18;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      cursor: pointer;
+      font-size: $font-size_16;
+      border-top: 1px solid $color_white;
+      transition: .5s;
+      cursor: pointer;
+      &.active {
+        background: $color_black;
+      }
+      &-label {
+        width: 100%;
+        &::before {
+          border: 1px solid $color_semi_black;
+          height: 16px;
+          width: 16px;
+          margin-right: 10px;
+          position: relative;
+          top: 3px;
+        }
+        &::after {
+          border-right: 3px solid $color_semi_black;
+          border-bottom: 3px solid $color_semi_black;
+          height: 15px;
+          width: 5px;
+          left: 7px;
+          top: 60%;
+          margin-top: -15px;
+        }
+      }
+    }
+    &-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    &-list {
+      display: none;
+      position: absolute;
+      width: 290px;
+      z-index: 1;
+      @include mq(md) {
+        max-width: 738px;
+      }
+      &.active {
+        display: block;
+      }
+      .drop-menu-none {
+        &:hover {
+          background: #0f7e92;
+        }
+      }
+    }
+  }
+}
+
+.filter-area {
+  background: $color_gray;
+  height: 65px;
+  line-height: 65px;
+  margin: 15px 0 5px;
+  font-size: $font-size_16;
+  padding: 0 15px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  @include mq(md) {
+    font-size: $font-size_12;
+    height: 40px;
+    line-height: 40px;
+  }
+  &-paragraph {
+    white-space: nowrap;
+    margin-left: 10px;
+    overflow-x: scroll;
+  }
+}
+
+.list-management {
+  margin: 10px 0;
+  text-align: right;
+  font-size: $font-size_14;
+  display: flex;
+  justify-content: flex-end;
+  &-link {
+    color: $color_blue;
+    width: 100px;
+    display: inline-block;
+    border: 1px solid $color_semi_black;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 0;
+    &.active {
+      color: $color_white;
+      background: $color_blue;
+    }
+  }
+}
+
+.lists {
+  border-top: 1px solid $color_semi_black;
+  margin-top: 10px;
+  max-height: 660px;
+  overflow-y: scroll;
+  .noshow {
+    color: $color_semi_black;
+    text-align: center;
+    margin-top: 50px;
+  }
+  .noshow-pc {
+    @include mq(md) {
+      display: none;
+    }
+  }
+  .noshow-sp {
+    display: none;
+    @include mq(md) {
+      display: block;
+    }
+  }
+
+  // フォローリスト PC版
+  .list-pc {
+    padding: 10px 0;
+    height: 120px;
+    border-bottom: 1px solid $color_semi_black;
+    display: flex;
+    justify-content: space-between;
+    @include mq(md) {
+      display: none;
+    }
+    &-info {
+      display: flex;
+      max-width: 1100px;
+      margin-right: 20px;
+      &-user {
+        @include mq(md) {
+          display: flex
+        }
+        &-list {
+          display: flex;
+          font-size: $font-size_14;
+          &-item {
+            margin-right: 20px;
+            &-span {
+              background: #ccc;
+              color: $color_white;
+              padding: 0 5px;
+              border-radius: 10px;
+            }
+          }
+        }
+      }
+    }
+    &-buttons {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 200px;
+      .list-pc-button {
+        width: 100%;
+      }
+    }
+  }
+
+  // フォローリスト SP版
+  .list-sp {
+    display: none;
+    padding: 10px 0;
+    border-bottom: 1px solid $color_semi_black;
+    justify-content: space-between;
+    @include mq(md) {
+      display: block;
+    }
+    &-theme {
+      display: flex;
+      justify-content: space-between;
+      &-user {
+        display: flex;
+        width: 100%;
+        &-info {
+          max-width: 80%;
+        }
+      }
+    }
+    &-buttons {
+      margin: 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      form {
+        width: 50%;
+      }
+    }
+  }
+
+  // PC/SP共通
+  .list-common-user-info {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+  }
+  .list-common-user-name {
+    font-size: $font-size_20;
+    font-weight: bold;
+    padding-top: 5px;
+    color: #666;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: scroll;
+    @include mq(md) {
+      max-width: 100%;
+
+    }
+  }
+  .list-common-user-id {
+    font-size: $font-size_14;
+    color: #ccc;
+    margin-left: 10px;
+    @include mq(md) {
+      margin-left: 0;
+      margin-top: 5px;
+    }
+  }
+  .list-common-user-sentence {
+    color: #666;
+    font-size: $font-size_16;
+    line-height: 1.5;;
+    margin: 10px 0 20px;
+    height: 50px;
+    overflow: hidden;
+    @include mq(md) {
+      margin-bottom: 10px;
+      height: 75px;
+    }
+  }
+  .list-common-list {
+    display: flex;
+    &-item {
+      margin-right: 20px;
+      color: #666;
+      font-size: $font-size_14;
+      @include mq(sm) {
+        margin-right: 10px;
+        font-size: $font-size_6;
+      }
+      &-span {
+        background: #ccc;
+        color: $color_white;
+        padding: 0 5px;
+        border-radius: 10px;
+      }
+    }
+  }
+  .list-common-follow {
+    background: $color_blue;
+    color: $color_white;
+    font-size: $font-size_16;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 17.5px;
+    margin-bottom: 10px;
+    border: none;
+    @include mq(md) {
+      width: 100%;
+      margin-bottom: 0;
+    }
+  }
+  .list-common-remove {
+    background: $color_black;
+    color: $color_white;
+    font-size: $font-size_16;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 17.5px;
+    margin-bottom: 10px;
+    border: none;
+    @include mq(md) {
+      width: 100%;
+      margin-bottom: 0;
+    }
+  }
+  .list-common-follower {
+    width: 100%;
+    font-size: $font-size_12;
+    text-align: center;
+    line-height: 25px;
+    font-weight: bold;
+    height: 25px;
+    background: #fbd0d9;
+    color: $color_red;
+    @include mq(md) {
+      width: 48%;
+      height: 35px;
+      line-height: 35px;
+    }
+  }
+}
+
+//----------- アカウント管理 ----------------
+.setting {
+  background: $color_gray;
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  &-title {
+    color: $color_blue;
+    font-size: $font-size_24;
+    font-weight: bold;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $color_blue;
+    margin-bottom: 30px;
+  }
+  &-list {
+    background: $color_white;
+    padding: 20px 20px 20px 40px;
+    margin-bottom: 25px;
+    border: 1px solid $color_blue;
+    list-style: initial;
+    color: $color_blue;
+    font-size: $font-size_18;
+    font-weight: bold;
+    @include mq(xl) {
+      font-size: $font-size_14;
+    }
+    &-item {
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: .5s;
+      &:hover {
+        opacity: .8;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+      &-link {
+        color: $color_blue;
+      }
+    }
+  }
+}
+
+//----------- 特定商取引に基づく表記 ----------------
+.tokutei {
+  max-width: 1050px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: $font-size_14;
+  color: $color_semi_black;
+  padding: 100px 15px 15px;
+  box-sizing: border-box;
+  @include mq(sm) {
+    font-size: $font-size_12;
+  }
+  h1 {
+    font-weight: bold;
+    font-size: $font-size_30;
+    margin-bottom: 30px;
+    @include mq(sm) {
+      font-size: $font-size_20;
+    }
+  }
+  tr {
+    border-bottom: 1px solid $color_semi_black;
+    th {
+      width: 25%;
+      background: $color_gray;
+      text-align: center;
+      padding: 10px;
+    }
+    td {
+      padding: 10px;
+      line-height: 1.5;
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+}
